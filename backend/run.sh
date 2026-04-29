@@ -55,6 +55,9 @@ echo POSTGRES_PASSWORD=$POSTGRES_PASSWORD >> .env
 
 echo DATABASE_URL="'postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@localhost:5432/$POSTGRES_DB?sslmode=disable'" >> .env
 
+# to start browser 
+echo ORIGIN=http://127.0.0.1:5500 >> .env
+
 echo 'all your secrets are saved'
 
 echo 'Running up migrations... '
