@@ -8,6 +8,7 @@ Bookly is a simple Go-based web application with focus on the backend design and
 - PostgreSQL
 - Docker
 - Bash
+- Makefile
 
 ## Features
 - RESTful API for managing books (CRUD operations)
