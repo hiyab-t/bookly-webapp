@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookly</title>
+</head>
+<body>
+    <h1>Bookly - Your next good read is only a click away </h1>
+    <h2>Our Book Collection</h2>
+    <section>
+    <div id="book_details"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch("http://localhost:4000/v1/books").then(
+                function (response) {
+                    response.text().then(function (text) {
+                        document.getElementById("book_details").innerHTML = text;
+                    });
+                },
+                    function (err) {
+                        document.getElementById("book_details").innerHTML = err;
+                    }
+                );
+            });
+        </script>
+
+        <script>
+            fetch("http://localhost:4000/v1/books").then(response => response.json()).then(data => console.log(data))
+        </script>
+
+    </section>
+
+    <section>
+        <h2>Create New Book</h2>
+        <form id="book_info">
+            <label></label>
+                Title: <input type="text" id="input_title">
+            </label>
+            <br>
+            <br>
+            <label>
+                Author: <input type="text" id="input_author">
+            </label> 
+            <br>
+            <br>
+            <label>
+                Genres: <input type="text" id="input_genres">
+            </label>
+            <br>
+            <br>
+            <input type="submit" id="create">
+        </form>
+
+    <script>
+
+            document.addEventListener("DOMContentLoaded", function() {
+                const create = document.getElementById("create");
+                create.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    
+                    const title = document.getElementById("input_title").value;
+                    const author = document.getElementById("input_author").value;
+                    const genres = document.getElementById("input_genres").value;
+                    
+                    const data = {
+                        title: title,
+                        author: author,
+                        genres: [genres]
+                    }
+                
+                    fetch("http://localhost:4000/v1/books", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(
+                            data
+                        )
+                    })
+                    .then(res => res.json())
+                    .then(json => console.log(json))
+                    .catch(err => console.log(err.message));
+                });
+            });
+        </script> 
+    </section>
+    <section>
+        <h2>Edit Book Details</h2>
+        <form id="book_update">
+            <label>
+                Book ID: <input type="text" id="update_input_id">
+            </label>
+            <br>
+            <br>
+            <label>
+                Title: <input type="text" id="update_input_title">
+            </label>
+            <br>
+            <br>
+            <label>
+                Author: <input type="text" id="update_input_author">
+            </label> 
+            <br>
+            <br>
+            <label>
+                Genres: <input type="text" id="update_input_genres">
+            </label>
+            <br>
+            <br>
+            <input type="submit" id="update">
+        </form>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const update = document.getElementById("update");
+                update.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    const book_id = document.getElementById("update_input_id").value;
+                    const title = document.getElementById("update_input_title").value;
+                    const author = document.getElementById("update_input_author").value;
+                    const genres = document.getElementById("update_input_genres").value;
+                    
+                    const data = {
+                        book_id: book_id,
+                        title: title,
+                        author: author,
+                        genres: [genres]
+                    }
+                
+                    fetch("http://localhost:4000/v1/books", {
+                        method: "PUT",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(
+                            data
+                        )
+                    })
+                    .then(res => res.json())
+                    .then(json => console.log(json))
+                    .catch(err => console.log(err.message));
+                });
+            });
+        </script>
+    </section>
+</body>
+</html>

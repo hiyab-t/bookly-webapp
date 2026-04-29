@@ -1,0 +1,64 @@
+package main
+
+import (
+	"fmt"
+	"net/http"
+)
+
+func (app *application) logError(r *http.Request, err error) {
+
+	
+	method := r.Method
+	uri := r.URL.RequestURI()
+
+
+	app.logger.Error(err.Error(), "method", method, "uri", uri)
+}
+
+func (app *application) badRequest(w http.ResponseWriter, r *http.Request, err error) {
+	app.errResponse(w, r, http.StatusBadRequest, err.Error())
+} 
+
+func (app *application) errResponse(w http.ResponseWriter, r *http.Request, status int, message any) {
+
+	env := envelope{"error": message}
+
+	err := app.writeJSON(w, env, nil)
+	if err != nil {
+		app.logError(r, err)
+		w.WriteHeader(500)
+	}
+
+}
+
+func (app *application) serverError(w http.ResponseWriter, r *http.Request, err error) {
+
+	app.logError(r, err)
+
+	message := "sorry, could not process your request"
+
+	app.errResponse(w, r, http.StatusInternalServerError, message)
+
+}
+
+func (app *application) notFoundResponse(w http.ResponseWriter, r *http.Request) {
+
+	message := "resource for your request not found"
+
+	app.errResponse(w, r, http.StatusNotFound, message)
+
+}
+
+func (app *application) MethodNotAllowed(w http.ResponseWriter, r *http.Request) {
+
+	message := fmt.Sprintf("%s method request not allowed for this response", r.Method)
+
+	app.errResponse(w, r, http.StatusMethodNotAllowed, message)
+
+}
+
+func (app *application) FailedValidationResponse(w http.ResponseWriter, r *http.Request, errors map[string]string) {
+
+	app.errResponse(w ,r, http.StatusUnprocessableEntity, errors)
+}
+
