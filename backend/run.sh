@@ -1,10 +1,16 @@
 #!/bin/bash
 
+
+input="$*"
+
+value=${input#*-cors-trusted-origins}
+echo $value
+
 # checks if any arguments have been passed
-while [[ "$*" = "" ]]; do
-    if [ "$*" != "" ]; then
+while [[ "$input" = "" ]]; do
+    if [ "$input" != "" ]; then
         break
-    elif [ "$*" = "" ]; then
+    elif [ "$input" = "" ]; then
         go run ./cmd/api -help
         echo 'The above arguments exist if you would like to set your own settings '
         echo '(Recommendation: leave the API server port and cors-trusted-origins as default)'
@@ -29,7 +35,7 @@ echo 'If N, please manually remove any postgres running container to avoid error
 read dckerDown
 
 if [[ "$dckerDown" != "y" ]]; then
-    break
+    echo ""
 else
     echo '....stopping all running containers....'
     docker compose down -v
@@ -39,8 +45,7 @@ fi
 echo '....creating .env file to hold your secrets....'
 touch .env
 
-echo ARGS=$* > .env
-
+# credentials for db connection
 echo 'Enter postgresDB name:'
 read POSTGRES_DB
 echo POSTGRES_DB=$POSTGRES_DB >> .env
@@ -55,8 +60,13 @@ echo POSTGRES_PASSWORD=$POSTGRES_PASSWORD >> .env
 
 echo DATABASE_URL="'postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@localhost:5432/$POSTGRES_DB?sslmode=disable'" >> .env
 
-# to start browser 
-echo ORIGIN=http://127.0.0.1:5500 >> .env
+# all arguments to be passed to go command in makefile rule 
+echo ARGS=$input > .env
+
+# start browser 
+
+DEFAULT_ORIGIN=http/
+echo ORIGIN=$DEFAULT_ORIGIN >> .env
 
 echo 'all your secrets are saved'
 
@@ -64,7 +74,7 @@ echo 'Running up migrations... '
 
 make db/migrations/up 
 
-xdg-open http://127.0.0.1:5500/ui/index.html || open http://127.0.0.1:5500/ui/index.html || start http://127.0.0.1:5500/ui/index.html
+xdg-open $value/ui/index.html || open $value/ui/index.html || start $value/ui/index.html
 
 make run/api
 
