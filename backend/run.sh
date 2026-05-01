@@ -6,6 +6,11 @@ input="$*"
 value=${input#*-cors-trusted-origins}
 echo $value
 
+OtherArgs=${value#*-}
+cut 
+echo $value
+
+
 # checks if any arguments have been passed
 
 if [ "$*" != "" ]; then
@@ -67,9 +72,9 @@ echo DATABASE_URL="'postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@localhost:5432/
 # all arguments to be passed to go command in makefile rule 
 echo ARGS=$input > .env
 
-# start browser 
+# to start browser 
 
-DEFAULT_ORIGIN=http/
+DEFAULT_ORIGIN=http://127.0.0.1:5500
 echo ORIGIN=$DEFAULT_ORIGIN >> .env
 
 echo 'all your secrets are saved'
@@ -78,7 +83,15 @@ echo 'Running up migrations... '
 
 make db/migrations/up 
 
-xdg-open $value/ui/index.html || open $value/ui/index.html || start $value/ui/index.html
+if [[ $input =~ "-cors-trusted-origins" ]]; then
+    value=${input#*-cors-trusted-origins}
+    OtherArgs=${value#*-}
+    echo $value | grep --exclude "-$OtherArgs"
+    xdg-open $value/ui/index.html || open $DEFAULT_ORIGIN/ui/index.html || start $DEFAULT_ORIGIN/ui/index.html
+else 
+    xdg-open $DEFAULT_ORIGIN/ui/index.html || open $DEFAULT_ORIGIN/ui/index.html || start $DEFAULT_ORIGIN/ui/index.html
+fi
+
 
 make run/api
 
