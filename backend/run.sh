@@ -22,14 +22,13 @@ else
         fi
 fi
 
-
 echo 'Are you sure you want to remove all running containers and volumes? (y/N)'
 echo 'If N, please manually remove any postgres running container to avoid errors.'
 
 read dckerDown
 
 if [[ "$dckerDown" != "y" ]]; then
-    break
+    echo ""
 else
     echo '....stopping all running containers....'
     docker compose down -v
