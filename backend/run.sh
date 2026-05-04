@@ -16,10 +16,6 @@ echo $value
 if [ "$*" != "" ]; then
     echo ""
 else
-while [[ "$input" = "" ]]; do
-    if [ "$input" != "" ]; then
-        break
-    elif [ "$input" = "" ]; then
         go run ./cmd/api -help
         echo 'The above arguments exist if you would like to set your own settings '
         echo '(Recommendation: leave the API server port and cors-trusted-origins as default)'
@@ -43,7 +39,6 @@ echo 'If N, please manually remove any postgres running container to avoid error
 read dckerDown
 
 if [[ "$dckerDown" != "y" ]]; then
-    echo ""
     echo ""
 else
     echo '....stopping all running containers....'
