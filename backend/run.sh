@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # checks if any arguments have been passed
-while [[ "$*" = "" ]]; do
+while [[ 1=1 ]]; do
     if [ "$*" != "" ]; then
         break
     elif [ "$*" = "" ]; then
