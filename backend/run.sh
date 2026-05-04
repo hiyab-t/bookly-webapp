@@ -12,7 +12,7 @@ echo $value
 
 
 # checks if any arguments have been passed
-while [[ "$input" = "" ]]; do
+while [[ 1 = 1 ]]; do
     if [ "$input" != "" ]; then
         break
     elif [ "$input" = "" ]; then
