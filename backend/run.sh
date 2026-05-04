@@ -4,11 +4,11 @@
 while [[ 1=1 ]]; do
     if [ "$*" != "" ]; then
         break
-    elif [ "$*" = "" ]; then
+    else
         go run ./cmd/api -help
         echo 'The above arguments exist if you would like to set your own settings '
         echo '(Recommendation: leave the API server port and cors-trusted-origins as default)'
-        edcho ""
+        echo ""
         echo 'would you like to set your own setting?(y/N)'
 
         read setArgQ
