@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # checks if any arguments have been passed
-while [[ 1=1 ]]; do
-    if [ "$*" != "" ]; then
-        break
-    else
+
+if [ "$*" != "" ]; then
+    echo ""
+else
         go run ./cmd/api -help
         echo 'The above arguments exist if you would like to set your own settings '
         echo '(Recommendation: leave the API server port and cors-trusted-origins as default)'
@@ -15,13 +15,13 @@ while [[ 1=1 ]]; do
 
         # if user is going by default settings it continues to excute the rest of commands
         if [[ "$setArgQ" != "y" ]]; then
-            break
+            echo ""
         else
             echo 'Please run "./run.sh" with the settings argument you would like to set'
             exit 0
         fi
-    fi
-done
+fi
+
 
 echo 'Are you sure you want to remove all running containers and volumes? (y/N)'
 echo 'If N, please manually remove any postgres running container to avoid errors.'
