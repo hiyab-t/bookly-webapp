@@ -49,7 +49,7 @@ func (app *application) createBookHandler(w http.ResponseWriter, r *http.Request
 	headers := make(http.Header)
 	headers.Set("Location", fmt.Sprintf("/v1/books/%d", book.Book_id))
 
-	err = app.writeJSON(w, envelope{"book": book}, headers)
+	err = app.writeJSON(w,http.StatusCreated, envelope{"book": book}, headers)
 	if err != nil {
 		app.serverError(w,r,err)
 		return
@@ -93,7 +93,7 @@ func (app *application) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = app.writeJSON(w, envelope{"metadata": metadata,"books": books,}, nil)
+	err = app.writeJSON(w,http.StatusOK, envelope{"metadata": metadata,"books": books,}, nil)
 	if err != nil {
 		app.serverError(w, r, err)
 		return
@@ -118,7 +118,7 @@ func (app *application) GetBookID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = app.writeJSON(w, envelope{"book": book}, headers); err != nil {
+	if err = app.writeJSON(w,http.StatusOK, envelope{"book": book}, headers); err != nil {
 		app.serverError(w, r, err)
 		return
 	}
@@ -182,7 +182,7 @@ func (app *application) PutBook(w http.ResponseWriter, r *http.Request) {
 	headers := make(http.Header)
 	headers.Set("Location", fmt.Sprintf("/v1/books/%d", book.Book_id))
 
-	err = app.writeJSON(w, envelope{"book":book}, headers)
+	err = app.writeJSON(w,http.StatusOK, envelope{"book":book}, headers)
 	if err != nil {
 		app.serverError(w, r, err)
 		return

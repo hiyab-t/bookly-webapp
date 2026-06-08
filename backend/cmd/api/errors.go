@@ -23,10 +23,10 @@ func (app *application) errResponse(w http.ResponseWriter, r *http.Request, stat
 
 	env := envelope{"error": message}
 
-	err := app.writeJSON(w, env, nil)
+	err := app.writeJSON(w,status, env, nil)
 	if err != nil {
 		app.logError(r, err)
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 	}
 
 }
@@ -62,3 +62,10 @@ func (app *application) FailedValidationResponse(w http.ResponseWriter, r *http.
 	app.errResponse(w ,r, http.StatusUnprocessableEntity, errors)
 }
 
+func (app *application) invalidCredentials(w http.ResponseWriter, r *http.Request) {
+	
+	message := "invalid authentication credentials"
+
+	app.errResponse(w, r, http.StatusUnauthorized, message)
+
+}

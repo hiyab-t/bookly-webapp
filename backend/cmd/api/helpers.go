@@ -89,7 +89,11 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dest an
 	return nil
 }
 
-func (app *application) writeJSON(w http.ResponseWriter, data envelope, headers http.Header) error {
+func (app *application) writeJSON(w http.ResponseWriter, status int, data envelope, headers http.Header) error {
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	maps.Insert(w.Header(), maps.All(headers))
 
 	js := json.NewEncoder(w)
 
@@ -98,12 +102,7 @@ func (app *application) writeJSON(w http.ResponseWriter, data envelope, headers 
 		app.logger.Error(err.Error())
 		http.Error(w, "sorry, server could not process your request", http.StatusInternalServerError)
 	}
-
 	
-	maps.Copy(w.Header(), headers)
-
-	w.Header().Set("Content-Type", "application/json")
-
 	return nil
 }
 

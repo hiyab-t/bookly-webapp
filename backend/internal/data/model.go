@@ -12,10 +12,14 @@ var (
 
 type Models struct {
 	Books BookModel
+	Users UsersModel
+	Tokens TokenModel
 }
 
 func NewModels(dbpool *pgxpool.Pool) Models {
 	return Models{
 		Books: BookModel{DBpool: dbpool},
+		Users: UsersModel{DBpool: dbpool},
+		Tokens: TokenModel{Dbpool: dbpool},
 	}
 }
