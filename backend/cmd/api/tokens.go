@@ -64,3 +64,4 @@ func (app *application) createAuthenticationHandler(w http.ResponseWriter, r *ht
 		app.serverError(w,r,err)
 	}
 }
+

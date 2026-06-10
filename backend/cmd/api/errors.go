@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
+
+
 )
 
 func (app *application) logError(r *http.Request, err error) {
@@ -68,4 +70,12 @@ func (app *application) invalidCredentials(w http.ResponseWriter, r *http.Reques
 
 	app.errResponse(w, r, http.StatusUnauthorized, message)
 
+}
+
+func (app *application) invalidAuthenticationToken(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("WWW-Authenticate", "Bearer")
+
+	message := "invalid or missing authentication token"
+
+	app.errResponse(w, r, http.StatusUnauthorized, message)
 }

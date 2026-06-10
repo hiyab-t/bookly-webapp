@@ -1,8 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
+	"strings"
+
+	"cafe_store.hiyabnako/internal/data"
+	"cafe_store.hiyabnako/internal/validator"
 )
 
 func (app *application) recoverPanic(next http.Handler) http.Handler {
@@ -49,5 +54,53 @@ func (app *application) enableCORS(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+
+func (app *application) Authenticated(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		w.Header().Set("Vary", "Authorization")
+
+		authZHeader := r.Header.Get("Authorization")
+
+		if authZHeader == "" {
+			r = app.contextSetUser(r, data.AnonUser)
+			next.ServeHTTP(w, r)
+			return
+		}
+
+
+		headerParts := strings.Split(authZHeader, " ")
+		if len(headerParts) != 2 || headerParts[0] == "Bearer" {
+			app.invalidAuthenticationToken(w, r)
+			return
+		}
+
+		token := headerParts[1]
+
+		v := validator.New()
+
+		if data.ValidateToken(v, token); !v.Valid() {
+			app.invalidAuthenticationToken(w,r)
+			return
+		}
+
+		user, err := app.models.Tokens.GetToken(data.ScopeAuthentication, token)
+		if err != nil {
+			switch {
+			case errors.Is(err, data.ErrRecordNotFound):
+				app.invalidAuthenticationToken(w,r)
+			default:
+				app.serverError(w, r, err)
+			}
+			return
+		}
+
+		r = app.contextSetUser(r, user)
+
+		next.ServeHTTP(w,r)
+	})
+
 }
 
