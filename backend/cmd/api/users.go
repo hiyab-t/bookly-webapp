@@ -44,6 +44,16 @@ func (app *application) RegisterUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err = app.models.Permissions.AddForUser(user.User_id, "books:read"); err != nil {
+		app.serverError(w,r, err)
+		return
+	}
+
+	if err = app.writeJSON(w,http.StatusAccepted, envelope{"user": user}, nil); err != nil {
+		app.serverError(w,r,err)
+		return
+	}
+
 }
 
 func (app *application) GetUsers(w http.ResponseWriter, r *http.Request) {
@@ -52,3 +62,4 @@ func (app *application) GetUsers(w http.ResponseWriter, r *http.Request) {
 	
 
 }
+

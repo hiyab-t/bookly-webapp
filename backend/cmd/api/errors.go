@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-
+	"golang.org/x/text/message"
 )
 
 func (app *application) logError(r *http.Request, err error) {
@@ -78,4 +78,18 @@ func (app *application) invalidAuthenticationToken(w http.ResponseWriter, r *htt
 	message := "invalid or missing authentication token"
 
 	app.errResponse(w, r, http.StatusUnauthorized, message)
+}
+
+func (app *application) requireAuthenticationRes(w http.ResponseWriter, r *http.Request) {
+	
+	message := "you must be authenticated to access this resource"
+
+	app.errResponse(w,r,http.StatusUnauthorized, message)
+}
+
+func (app *application) notPermittedRes(w http.ResponseWriter, r *http.Request) {
+	message := "your user account doesn't have the necessary permissions to access this resource"
+
+	app.errResponse(w,r, http.StatusForbidden,message)
+
 }

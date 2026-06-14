@@ -72,7 +72,7 @@ func (app *application) Authenticated(next http.Handler) http.Handler {
 
 
 		headerParts := strings.Split(authZHeader, " ")
-		if len(headerParts) != 2 || headerParts[0] == "Bearer" {
+		if len(headerParts) != 2 || headerParts[0] != "Bearer" {
 			app.invalidAuthenticationToken(w, r)
 			return
 		}
@@ -82,11 +82,11 @@ func (app *application) Authenticated(next http.Handler) http.Handler {
 		v := validator.New()
 
 		if data.ValidateToken(v, token); !v.Valid() {
-			app.invalidAuthenticationToken(w,r)
+			app.invalidCredentials(w,r)
 			return
 		}
 
-		user, err := app.models.Tokens.GetToken(data.ScopeAuthentication, token)
+		user, err := app.models.Tokens.GetUserForToken(data.ScopeAuthentication, token)
 		if err != nil {
 			switch {
 			case errors.Is(err, data.ErrRecordNotFound):
@@ -104,3 +104,38 @@ func (app *application) Authenticated(next http.Handler) http.Handler {
 
 }
 
+func (app *application) isAuthenticated(next http.HandlerFunc) http.HandlerFunc {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		user := app.constextGetUser(r) 
+
+		if user.IsAnon() {
+			app.requireAuthenticationRes(w,r)
+			return 
+		}
+
+		next.ServeHTTP(w,r)
+	})
+}
+
+func (app *application) requirePermissions(code string, next http.HandlerFunc) http.HandlerFunc {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+			user := app.constextGetUser(r)
+
+			p,err := app.models.Permissions.GetAllForUser(user.User_id)
+			if err != nil {
+				app.serverError(w,r,err)
+				return 
+			}
+
+			if !p.Include(code) {
+				app.notPermittedRes(w,r)
+				return 
+			}
+
+			next.ServeHTTP(w,r)
+
+	}
+
+	return app.isAuthenticated(fn)
+}

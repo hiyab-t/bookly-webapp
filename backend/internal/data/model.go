@@ -14,6 +14,7 @@ type Models struct {
 	Books BookModel
 	Users UsersModel
 	Tokens TokenModel
+	Permissions PermissionsModel
 }
 
 func NewModels(dbpool *pgxpool.Pool) Models {
@@ -21,5 +22,6 @@ func NewModels(dbpool *pgxpool.Pool) Models {
 		Books: BookModel{DBpool: dbpool},
 		Users: UsersModel{DBpool: dbpool},
 		Tokens: TokenModel{Dbpool: dbpool},
+		Permissions: PermissionsModel{DBpool: dbpool},
 	}
 }
