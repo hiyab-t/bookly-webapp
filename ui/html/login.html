@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookly</title>
+</head>
+<body>
+    <h2>Welcome back</h2>
+    <label>Email:<input type="text" id="email_id"></label>
+    <br>
+    <label>Password:<input type="text" id="psst_id"></label>
+    <br>
+    <input type="Submit" title="Login" id="login">
+    <h5>Don't have an account yet? <a href="/ui/html/register.html">Sign up here.</a>
+    </h5>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+                    const login = document.getElementById("login");
+                    login.addEventListener("click", function(event) {
+                        event.preventDefault();
+
+                        const email = document.getElementById("email_id").value;
+                        const password = document.getElementById("psst_id").value;
+
+                        const data = {
+                            email: email,
+                            password: password
+                        }
+                    
+                        fetch("http://localhost:4000/v1/tokens/authenticate", {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(
+                                data
+                            )
+                        })
+                        .then(res => res.json())
+                        .then(json => console.log(json))
+                        .catch(err => console.log(err.message));
+                    });
+                });
+    </script> 
+</body>
+</html>

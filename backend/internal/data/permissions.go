@@ -57,7 +57,7 @@ func (db *PermissionsModel) GetAllForUser(user_id int) (Permissions, error){
 func (db *PermissionsModel) AddForUser(user_id int, code string) error{
 
 	qry := `insert into user_permission 
-			select $1, permission_id from permissions where code = ANY($2);`
+			select $1, permission_id from permissions where code = ANY($2)`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
