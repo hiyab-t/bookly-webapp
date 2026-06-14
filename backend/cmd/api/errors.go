@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-
-	"golang.org/x/text/message"
 )
 
 func (app *application) logError(r *http.Request, err error) {
