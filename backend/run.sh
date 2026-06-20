@@ -78,8 +78,3 @@ make db/migrations/up
 xdg-open http://127.0.0.1:5500/ui/index.html || open http://127.0.0.1:5500/ui/index.html || start http://127.0.0.1:5500/ui/index.html
 
 make run/api
-
-kjj
-f
-
-#trial trial trial hi great gjhj anotehr trial
