@@ -79,6 +79,7 @@ xdg-open http://127.0.0.1:5500/ui/index.html || open http://127.0.0.1:5500/ui/in
 
 make run/api
 
+kjj
+f
 
-
-
+#trial trial trial hi great gjhj anotehr trial
