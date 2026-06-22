@@ -31,7 +31,9 @@ Bookly is a simple Go-based web application with focus on the backend design and
 
 ```bash
     cd backend
-    ./run.sh
+    ./run.sh 
+    # or 
+    ./run.sh -f # this is preferred to get everything set up simply using default settings
 ```
 
 Reload the page when it comes up on the browser.
