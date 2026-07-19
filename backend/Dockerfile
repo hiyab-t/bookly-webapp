@@ -11,7 +11,7 @@ RUN go mod download
 COPY . .
 
 # build
-RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-gs-ping ./cmd/api
+RUN CGO_ENABLED=0 GOOS=linux go build -o /bookly ./cmd/api
 
 # run the compiled binary when the container starts
-CMD ["/docker-gs-ping"]
+CMD ["/bookly"]
